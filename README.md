@@ -515,5 +515,4 @@ Repository owner: `fias036911-create` (see GitHub profile for contact and affili
 
 —
 
-If this README looks good, tell me which additional pieces you want me to add next (scaffold example hardware, add a formal proof example, or create CI to run verifications).
->>>>>>> d381e22 (assistant: commit workspace changes)
+
