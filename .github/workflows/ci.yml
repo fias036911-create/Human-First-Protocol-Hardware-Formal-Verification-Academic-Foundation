@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  super-linter:
+    name: Super-Linter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Super-Linter
+        uses: github/super-linter@v5
+        env:
+          VALIDATE_ALL_CODEBASE: true
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  python-tests:
+    name: Run Python tests (if present)
+    runs-on: ubuntu-latest
+    needs: super-linter
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install requirements (if present)
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run tests (if present)
+        run: |
+          if [ -d tests ] || ls *_test.py 2>/dev/null || ls test_*.py 2>/dev/null; then
+            pip install pytest || true
+            pytest -q
+          else
+            echo "No Python tests detected; skipping pytest."
+          fi

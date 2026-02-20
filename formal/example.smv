@@ -1,0 +1,11 @@
+-- Simple counter model for NuSMV
+MODULE main
+VAR
+  counter : 0..15;
+
+ASSIGN
+  init(counter) := 0;
+  next(counter) := (counter + 1) mod 16;
+
+-- Property: counter always stays within 0..15 (trivially true by type)
+SPEC AG (counter >= 0 & counter <= 15)
